@@ -1,21 +1,18 @@
-var http = require('http'),
-    httpProxy = require('http-proxy');
+const express = require('express');
+var proxy = require('express-http-proxy');
+const app = express();
+const port = 8080;
 
-//
-// Create a proxy server with custom application logic
-//
-var proxy = httpProxy.createProxyServer({});
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+})
 
-//
-// Create your custom server and just call `proxy.web()` to proxy
-// a web request to the target passed in the options
-// also you can use `proxy.ws()` to proxy a websockets request
-//
-var server = http.createServer(function(req, res) {
-  // You can define here your custom logic to handle the request
-  // and then proxy the request.
-  proxy.web(req, res, { target: 'http://tf-lb-20201005190429403100000002-920338195.sa-east-1.elb.amazonaws.com' });
-});
+app.get('/test', (req, res) => {
+  res.send('Test!');
+})
 
-console.log("Listening on port 8080")
-server.listen(8080);
+app.use('/proxy', proxy('http://internal-tf-lb-20201005221956071000000001-1260404789.sa-east-1.elb.amazonaws.com'));
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+})
