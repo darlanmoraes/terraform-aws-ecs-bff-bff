@@ -6,6 +6,7 @@ const AWS = require("aws-sdk");
 AWS.config.update({
   region: process.env.REGION
 });
+
 const elbv2 = new AWS.ELBv2();
 
 const DNSPrefix = "internal-";
