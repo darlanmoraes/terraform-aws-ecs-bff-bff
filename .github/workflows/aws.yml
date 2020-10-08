@@ -17,6 +17,7 @@ jobs:
         fetch-depth: 0
 
     - name: Bump version and push tag
+      id: bump-version
       uses: mathieudutour/github-tag-action@v4.5
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -37,7 +38,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: bff
-        IMAGE_TAG: ${{ github.event.release.tag_name }}
+        IMAGE_TAG: ${{ steps.bump-version.outputs.new_version }}
       run: |
         # Build a docker container and
         # push it to ECR so that it can
